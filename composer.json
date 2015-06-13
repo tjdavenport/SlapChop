@@ -1,0 +1,24 @@
+{
+    "name": "tjdavenport/slap-chop",
+    "require-dev": {
+        "phpunit/phpunit": "^4.7"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Torrance Davenport",
+            "email": "tjdavenport2@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "v2.7.1",
+        "symfony/finder": "v2.7.1",
+        "intervention/image": "2.2.1"
+
+    },
+    "autoload": {
+        "psr-4": {
+            "SlapChop\\": "src/"
+        }
+    }
+}
