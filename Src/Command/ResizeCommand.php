@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use SlapChop\ResizeTransit;
 
 class ResizeCommand extends Command
 {
@@ -14,28 +15,36 @@ class ResizeCommand extends Command
     {
         $this
             ->setName('resize')
-            ->setDescription('Resize all images in a folder')
-            ->addArgument(
+            ->setDescription('Resize all images in a folder and save to destination')
+            ->addOption(
                 'target',
-                InputArgument::REQUIRED,
+                't',
+                InputOption::VALUE_OPTIONAL,
                 'The target directory'
             )
-            ->addArgument(
+            ->addOption(
                 'dest',
-                InputArgument::REQUIRED,
+                'd',
+                InputOption::VALUE_REQUIRED,
                 'The destination directory'
             )
             ->addOption(
                 'height',
                 'y',
                 InputOption::VALUE_OPTIONAL,
-                'Height (in pixels) to size to'
+                'Height (in pixels) to resize to'
             )
             ->addOption(
                 'width',
                 'x',
                 InputOption::VALUE_OPTIONAL,
-                'Width (in pixels) to size to'
+                'Width (in pixels) to resize to'
+            )
+            ->addOption(
+                'keep-ratio',
+                'k',
+                InputOption::VALUE_OPTIONAL,
+                'Maintain aspect ratios'
             )
         ;
 
@@ -43,6 +52,11 @@ class ResizeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $target = $input->getOption('target');
+        $dest = $input->getOption('dest');
+        $height = $input->getOption('height');
+        $width = $input->getOption('width');
+
 
     }
 }
