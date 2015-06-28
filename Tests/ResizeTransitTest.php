@@ -2,7 +2,9 @@
 
 use SlapChop\ResizeTransit;
 use SlapChop\AspectRatioCalculator;
+use SlapChop\Provider\SlapChopProvider;
 use Symfony\Component\Finder\Finder;
+use Pimple\Container;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ResizeTransitTest extends PHPUnit_Framework_TestCase
@@ -21,7 +23,9 @@ class ResizeTransitTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $container = new Container();
         $this->transit = new ResizeTransit();
+        $this->transit->setContainer($container->register(new SlapChopProvider()));
     }
 
     public function tearDown()

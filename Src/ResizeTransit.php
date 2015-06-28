@@ -11,6 +11,7 @@ class ResizeTransit
     protected $finder;
     protected $height = null;
     protected $width = null;
+    protected $container = null;
 
     private $maintainRatio;
 
@@ -21,6 +22,11 @@ class ResizeTransit
         Image::configure();
         $this->maintainRatio = $maintainRatio;
         $this->finder = new Finder();
+    }
+
+    public function setContainer($pimple)
+    {
+        $this->container = $pimple;
     }
 
     public function setMaintainRatio($maintainRatio)
@@ -46,6 +52,8 @@ class ResizeTransit
             ->in($targetDir)
             ->name(self::IMAGE_REGEX)
         ;
+
+        $this->dispatchEvent('jobstart', $images);
 
         foreach ($images as $imageFile) {
             $image = Image::make($imageFile->getPathname());
@@ -83,5 +91,13 @@ class ResizeTransit
         }
 
         return $image->height();
+    }
+
+    private function dispatchEvent($eventName, $eventParam)
+    {
+        if ($this->container !== null) {
+            $events = $this->container['resizeEvents'];
+            $events[$eventName]($eventParam);
+        }
     }
 }

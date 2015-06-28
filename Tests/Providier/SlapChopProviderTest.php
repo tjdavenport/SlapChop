@@ -19,8 +19,8 @@ class SlapChopProviderTest extends PHPUnit_Framework_TestCase
     public function testRegister()
     {
         $container = new Container();        
-        $container->register(new SlapChopProvider());
+        $container->register(new SlapChopProvider('resize'));
 
-        $this->assertTrue($container['dispatcher'] instanceof EventDispatcher);
+        $this->assertTrue($container['resizeDispatcher'] instanceof EventDispatcher);
     }
 }
