@@ -11,6 +11,14 @@ use SlapChop\ResizeTransit;
 
 class ResizeCommand extends Command
 {
+
+    protected $transit;
+
+    public function __construct(ResizeTransit $transit)
+    {
+        $this->transit = $transit;
+    }
+
     protected function configure()
     {
         $this
@@ -56,8 +64,6 @@ class ResizeCommand extends Command
         $dest = $input->getOption('dest');
         $height = $input->getOption('height');
         $width = $input->getOption('width');
-
-
     }
 }
 
