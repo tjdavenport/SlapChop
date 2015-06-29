@@ -70,7 +70,10 @@ class ResizeTransit
 
             $image->resize($width, $height);
             $image->save($destDir . $imageFile->getFilename());
+            $this->dispatchEvent('move', $image);
         }
+
+        $this->dispatchEvent('jobend');
     }
 
     private function determineWidth($newHeight, $image)
@@ -93,7 +96,7 @@ class ResizeTransit
         return $image->height();
     }
 
-    private function dispatchEvent($eventName, $eventParam)
+    private function dispatchEvent($eventName, $eventParam = null)
     {
         if ($this->container !== null) {
             $events = $this->container['resizeEvents'];

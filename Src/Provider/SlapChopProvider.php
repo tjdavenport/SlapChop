@@ -33,6 +33,12 @@ class SlapChopProvider implements ServiceProviderInterface
             return [
                 'jobstart' => function(Finder $files) use ($c) {
                     $c['resizeDispatcher']->dispatch('resize.jobstart', new ResizeJobStartEvent($files));
+                },
+                'move' => function($image) use ($c) {
+                    $c['resizeDispatcher']->dispatch('resize.move', new ResizeMoveEvent($image));
+                },
+                'jobend' => function() use ($c) {
+                    $c['resizeDispatcher']->dispatch('resize.jobend', new ResizeJobEndEvent());
                 }
 
             ];
