@@ -4,6 +4,7 @@ namespace SlapChop;
 
 use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use SlapChop\AspectRatioCalculator;
 
 class ResizeTransit
@@ -11,22 +12,17 @@ class ResizeTransit
     protected $finder;
     protected $height = null;
     protected $width = null;
+    protected $targetDir;
+    protected $destDir;
     protected $container = null;
-
     private $maintainRatio;
 
     const IMAGE_REGEX = '/^.?[^\.]+\.(jpe?g|png|gif|tiff)$/';
 
-    public function __construct($maintainRatio = false)
+    public function __construct()
     {
         Image::configure();
-        $this->maintainRatio = $maintainRatio;
         $this->finder = new Finder();
-    }
-
-    public function setContainer($pimple)
-    {
-        $this->container = $pimple;
     }
 
     public function setMaintainRatio($maintainRatio)
@@ -44,12 +40,27 @@ class ResizeTransit
         $this->width = $width;
     }
 
-    public function dispatch($targetDir, $destDir)
+    public function setTargetDir($dir)
+    {
+        $this->targetDir = $dir;
+    }
+
+    public function setDestDir($dir)
+    {
+        $this->destDir = $dir;
+    }
+
+    public function setContainer($container)
+    {
+        $this->container = $container;
+    }
+
+    public function dispatch()
     {
         $images = $this
             ->finder
             ->files()
-            ->in($targetDir)
+            ->in($this->targetDir)
             ->name(self::IMAGE_REGEX)
         ;
 
@@ -69,11 +80,28 @@ class ResizeTransit
             }
 
             $image->resize($width, $height);
-            $image->save($destDir . $imageFile->getFilename());
+            $image->save($this->destDir . $imageFile->getFilename());
             $this->dispatchEvent('move', $image);
         }
 
         $this->dispatchEvent('jobend');
+    }
+
+    protected function configure(array $options)
+    {
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'targetDir' => getcwd(),
+            'maintainRatio' => true,
+            'height' => null,
+            'width' => null
+        ]);
+        $resolver->setRequired(['destDir', 'container']);
+        $resolver->setAllowedValues('destDir', function($value) {
+            return file_exists($value);
+        });
+        $resolver->setAllowedValues('container', ['Container']);
+        $resolvedOptions = $resolver->resolve($options);
     }
 
     private function determineWidth($newHeight, $image)

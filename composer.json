@@ -15,7 +15,8 @@
         "symfony/finder": "v2.7.1",
         "symfony/event-dispatcher": "v2.7.1",
         "intervention/image": "2.2.1",
-        "pimple/pimple": "v3.0.0"
+        "pimple/pimple": "v3.0.0",
+        "symfony/options-resolver": "^2.7"
     },
     "autoload": {
         "psr-4": {

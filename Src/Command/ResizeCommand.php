@@ -7,16 +7,21 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Pimple\Container;
 use SlapChop\ResizeTransit;
+use SlapChop\Provider\SlapChopProvider;
 
 class ResizeCommand extends Command
 {
 
     protected $transit;
 
-    public function __construct(ResizeTransit $transit)
+    public function __construct()
     {
-        $this->transit = $transit;
+        parent::__construct();
+        $container = new Container();
+        $this->transit = new ResizeTransit();
+        $this->transit->setContainer($container->register(new SlapChopProvider()));
     }
 
     protected function configure()
@@ -27,7 +32,7 @@ class ResizeCommand extends Command
             ->addOption(
                 'target',
                 't',
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 'The target directory'
             )
             ->addOption(
@@ -39,19 +44,19 @@ class ResizeCommand extends Command
             ->addOption(
                 'height',
                 'y',
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 'Height (in pixels) to resize to'
             )
             ->addOption(
                 'width',
                 'x',
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_REQUIRED,
                 'Width (in pixels) to resize to'
             )
             ->addOption(
                 'keep-ratio',
                 'k',
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_NONE,
                 'Maintain aspect ratios'
             )
         ;
@@ -64,6 +69,8 @@ class ResizeCommand extends Command
         $dest = $input->getOption('dest');
         $height = $input->getOption('height');
         $width = $input->getOption('width');
+        $maintainRatio = $input->getOption('keep-ratio');
+
     }
 }
 

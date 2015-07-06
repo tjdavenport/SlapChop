@@ -24,7 +24,9 @@ class ResizeTransitTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         $container = new Container();
-        $this->transit = new ResizeTransit();
+        $this->transit = new ResizeTransit([
+
+        ]);
         $this->transit->setContainer($container->register(new SlapChopProvider()));
     }
 
@@ -37,7 +39,9 @@ class ResizeTransitTest extends PHPUnit_Framework_TestCase
     {
         $this->transit->setHeight(60);
         $this->transit->setWidth(60);
-        $this->transit->dispatch($this->fixturePath, $this->destPath);
+        $this->transit->setTargetDir($this->fixturePath);
+        $this->transit->setDestDir($this->destPath);
+        $this->transit->dispatch();
 
         foreach ($this->collect($this->destPath) as $imageFile) {
             $image = Image::make($imageFile->getPathname());
@@ -57,7 +61,9 @@ class ResizeTransitTest extends PHPUnit_Framework_TestCase
         }
 
         $this->transit->setHeight(50);
-        $this->transit->dispatch($this->fixturePath, $this->destPath);
+        $this->transit->setTargetDir($this->fixturePath);
+        $this->transit->setDestDir($this->destPath);
+        $this->transit->dispatch();
 
         $count = 0;
         foreach ($this->collect($this->destPath) as $imageFile) {
